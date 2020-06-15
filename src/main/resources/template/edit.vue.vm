@@ -1,0 +1,119 @@
+<template>
+    <!--表单-->
+    <div class="pageMain">
+        <div class="flex_b_c b_b tabTitBox">
+            <div class="flex_l_c">
+                <div class="titLine"></div>
+                <div class="listTit">{{pageName}}</div>
+            </div>
+            <div>
+                <el-button type="primary" size="small" icon="el-icon-plus" @click="backBtn">返回</el-button>
+            </div>
+        </div>
+        <div class="plateBox">
+            <el-row :gutter="40">
+                #foreach($column in $columns)
+                    #if($column.columnName != $pk.columnName)
+                        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="m_b2">
+                            <el-row>
+                                <el-col :xs="10" :sm="10" :md="6" :lg="6" :xl="6" class="lableName"><span
+                                        class="red">* </span>${column.comments}：
+                                </el-col>
+                                <el-col :xs="14" :sm="14" :md="18" :lg="18" :xl="18">
+                                    <el-input v-model="iptData.${column.attrname}" placeholder="请输入${column.comments}"
+                                              :disabled="iptDisabled"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    #end
+                #end
+            </el-row>
+            <div class="flex_c_c m_tb1">
+                <el-button type="primary" size="small" v-if="formType != 2" @click="clickBut(formType)">确定</el-button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "${classname}Lssue",
+        props: {
+            formType: Number,
+            formData: Object
+        },
+        data() {
+            return {
+                pageName: '',  //页面名称
+                iptDisabled: false,  //是否禁用输入框
+                iptData: {},
+            }
+        },
+        mounted() {
+            if (this.formType == 1) {
+                this.pageName = '新建';
+            } else if (this.formType == 2) {
+                this.pageName = '编辑';
+                this.iptData = this.formData;
+            } else if (this.formType == 3) {
+                this.pageName = '查看';
+                this.iptData = this.formData;
+                this.iptDisabled = true;
+            }
+        },
+        methods: {
+            // 返回
+            backBtn() {
+                #[[this.$emit("getForm", false)]]#
+            },
+            clickBut(type) {
+                let that = this;
+                if (!that.isVerify()) {
+                    return;
+                }
+                if (type === 0) {
+                    that.add();
+                } else if (type === 1) {
+                    that.update();
+                }
+            },
+            update() {
+                let that = this;
+                #[[that.$axios]]#(userFun('update${className}'), that.iptData, 'put').then((res) => {
+                    if (res.status) {
+                        #[[this.$hint("修改成功", "success");]]#
+                        that.backBtn();
+                    }
+                });
+            },
+            add() {
+                let that = this;
+                #[[that.$axios]]#(userFun('save${className}'), that.iptData, 'post').then((res) => {
+                    if (res.status) {
+                        #[[this.$hint("保存成功", "success");]]#
+                        that.backBtn();
+                    }
+                });
+            },
+            isVerify() {
+                let that = this;
+#foreach($column in $columns)
+    #if($column.columnName != $pk.columnName && $column.columnName !='data1'&& $column.columnName !='data2'&& $column.columnName !='data3'&& $column.columnName !='data4'&& $column.columnName !='logic_type')
+                if (that.iptData.${column.attrname} == '' || that.iptData.${column.attrname} == null) {
+                    #[[this.$hint]]#("请输入${column.comments}", "error");
+                    return false;
+                }
+    #end
+#end
+                return true;
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+    .plateBox .el-input-number {
+        line-height: 1.9rem;
+        width: 70%;
+    }
+</style>

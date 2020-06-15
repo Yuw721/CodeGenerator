@@ -1,0 +1,101 @@
+package ${package}.controller;
+
+import java.util.Arrays;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import ${corePackage}.enums.ReturnCodeEnum;
+import ${corePackage}.vo.ZydResult;
+import ${package}.entity.${className};
+import ${package}.service.${className}Service;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * @description: ${comments} 控制类
+ * @author: ${author}
+ * @time: ${datetime}
+ * @version: ${version}
+ **/
+@Api(tags = "${comments}控制类")
+@Slf4j
+@RestController
+@RequestMapping("${pathName}")
+public class ${className}Controller {
+
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+    /**
+     * @Description 列表查询
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    @ApiOperation("列表")
+    @GetMapping("/list")
+    public ZydResult list(@RequestParam(required = false, defaultValue = "1") int current,
+                          @RequestParam(required = false, defaultValue = "10") int size) {
+        IPage<${className}> page = ${classname}Service.queryPage(current, size);
+        return ZydResult.SUCCESS(page);
+    }
+
+    /**
+     * @Description 根据id获取信息
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${pk.attrname} 主键id
+     * @return
+     **/
+    @ApiOperation("根据id获取信息")
+    @GetMapping("/getById/{${pk.attrname}}")
+    public ZydResult getById(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}) {
+        return ZydResult.SUCCESS(${classname}Service.getById(${pk.attrname}));
+    }
+
+    /**
+     * @Description 保存
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${classname} 详细信息
+     * @return
+     **/
+    @ApiOperation("保存")
+    @PostMapping("/save")
+    public ZydResult save(@RequestBody ${className} ${classname}) {
+        return ZydResult.SUCCESSORFAIL(${classname}Service.save(${classname}), ReturnCodeEnum.SAVE_SUCCESS.getText(), ReturnCodeEnum.SAVE_FAILS.getText());
+    }
+
+    /**
+     * @Description 修改
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${classname} 详细信息
+     * @return
+     **/
+    @ApiOperation("修改")
+    @PutMapping("/updateById")
+    public ZydResult updateById(@RequestBody ${className} ${classname}) {
+        return ZydResult.SUCCESSORFAIL(${classname}Service.updateById(${classname}), ReturnCodeEnum.UPDATE_SUCCESS.getText(), ReturnCodeEnum.UPDATE_FAILS.getText());
+    }
+
+    /**
+     * @Description 删除
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param ${pk.attrname} 主键id
+     * @return
+     **/
+    @ApiOperation("删除")
+    @DeleteMapping("/removeById/{${pk.attrname}}")
+    public ZydResult removeById(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}) {
+        return ZydResult.SUCCESSORFAIL(${classname}Service.removeById(${pk.attrname}), ReturnCodeEnum.REMOVE_SUCCESS.getText(), ReturnCodeEnum.REMOVE_FAILS.getText());
+    }
+}

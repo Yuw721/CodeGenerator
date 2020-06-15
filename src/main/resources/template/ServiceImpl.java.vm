@@ -1,0 +1,99 @@
+package ${package}.service.impl;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import zyd.hnst.core.cache.CacheRemove;
+import org.springframework.stereotype.Service;
+
+import ${package}.entity.${className};
+import ${package}.mapper.${className}Mapper;
+import ${package}.service.${className}Service;
+
+/**
+ * @description: ${comments} 逻辑实现层
+ * @author: ${author}
+ * @time: ${datetime}
+ * @version: ${version}
+ */
+@Service("${classname}Service")
+public class ${className}ServiceImpl implements ${className}Service {
+
+    @Autowired
+    @SuppressWarnings("all")
+    private ${className}Mapper ${classname}Mapper;
+
+    /**
+     * @Description 列表查询
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    @Override
+    @Cacheable(value = "${classname}", key = "T(zyd.hnst.core.constant.CoreConstants).CACHE_CONFIG_KEY+methodName+#current+#size")
+    public IPage<${className}> queryPage(int current, int size) {
+        QueryWrapper<${className}> queryWrapper = new QueryWrapper<>();
+        Page<${className}> page = new Page<>(current, size);
+        return ${classname}Mapper.selectPage(page, queryWrapper);
+    }
+
+    /**
+     * @Description 根据id获取信息
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    @Override
+    @Cacheable(value = "${classname}", key = "#${pk.attrname}")
+    public ${className} getById(${pk.attrType} ${pk.attrname}) {
+        return ${classname}Mapper.selectById(id);
+    }
+
+    /**
+     * @Description 保存
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    @Override
+    @CachePut(value = "${classname}", key = "#${classname}.${pk.attrname}")
+    @CacheRemove(value = "${classname}")
+    public Boolean save(${className} ${classname}) {
+        return ${classname}Mapper.insert(${classname}) > 0;
+    }
+
+    /**
+     * @Description 修改
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    @Override
+    @CachePut(value = "${classname}", key = "#${classname}.${pk.attrname}")
+    @CacheRemove(value = "${classname}")
+    public Boolean updateById(${className} ${classname}) {
+        return ${classname}Mapper.updateById(${classname}) > 0;
+    }
+
+    /**
+     * @Description 删除
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    @Override
+    @CacheEvict(value = "${classname}", key = "#${pk.attrname}")
+    @CacheRemove(value = "${classname}")
+    public Boolean removeById(${pk.attrType} ${pk.attrname}) {
+        return ${classname}Mapper.deleteById(${pk.attrname}) > 0;
+    }
+}

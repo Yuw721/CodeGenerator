@@ -1,0 +1,61 @@
+package ${package}.service;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import ${package}.entity.${className};
+
+import java.util.Map;
+
+/**
+ * @description: ${comments} 逻辑接口层
+ * @author: ${author}
+ * @time: ${datetime}
+ * @version: ${version}
+ */
+public interface ${className}Service {
+
+    /**
+     * @Description 列表查询
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    IPage<${className}> queryPage(int current, int size);
+
+    /**
+     * @Description 根据id获取信息
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    ${className} getById(${pk.attrType} ${pk.attrname});
+
+    /**
+     * @Description 保存
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    Boolean save(${className} ${classname});
+
+    /**
+     * @Description 修改
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    Boolean updateById(${className} ${classname});
+
+    /**
+     * @Description 删除
+     * @Author ${author}
+     * @Date ${datetime}
+     * @Param
+     * @return
+     **/
+    Boolean removeById(${pk.attrType} ${pk.attrname});
+}
+
